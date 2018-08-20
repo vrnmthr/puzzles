@@ -5,11 +5,12 @@ import (
 	"sort"
 	"github.com/kavehmz/prime"
 	"fmt"
+	"time"
 )
 
 const (
 	MinAge = 2
-	MaxAge = 19
+	MaxAge = 20
 	NumChildren = 3
 	YearDiff = 2
 )
@@ -113,12 +114,18 @@ func id(ints []int) uint64 {
 func solve() [][]int {
 
 	// get all possible solutions
+	fmt.Printf("generating guesses...")
+	start := time.Now()
 	guesses := combine(MinAge, MaxAge, NumChildren)
 	for _, guess := range guesses {
 		sort.Ints(guess)
 	}
+	fmt.Printf("%s\n", time.Since(start))
+
 
 	// find all solutions
+	fmt.Printf("finding solutions...")
+	start = time.Now()
 	solutions := make(map[uint64][]int)
 	for _, firstGuess := range guesses {
 		for _, secondGuess := range guesses {
@@ -128,8 +135,11 @@ func solve() [][]int {
 			}
 		}
 	}
+	fmt.Printf("%s\n", time.Since(start))
 
 	// find a set of solutions that are YearDiff apart
+	fmt.Printf("matching solutions...")
+	start = time.Now()
 	answers := make([][]int, 0)
 	for _, solution := range solutions {
 		translated := make([]int, len(solution))
@@ -140,10 +150,11 @@ func solve() [][]int {
 			answers = append(answers, solution)
 		}
 	}
+	fmt.Printf("%s\n", time.Since(start))
 
 	return answers
 }
 
 func main() {
-	fmt.Println(solve())
+	fmt.Printf("solutions: %v", solve())
 }
